@@ -1,4 +1,7 @@
+import random
 from Jugador import Jugador
+from bubbleSort import timesBubbleSort
+from mergeSort import timesMergeSort
 
 def busquedaBinariaIterativa(A, key, attr):
     i = 0
@@ -38,6 +41,21 @@ def timesBusquedaBinariaIterativa(A, key, attr):
 
     return False, times
 
+
+def timesBusqBinIterativaConOrdenamientoDirecto(A, key, attr):
+    times = 0
+    times += timesBubbleSort(A, attr)
+    x, time = timesBusquedaBinariaIterativa(A, key, attr)
+    times += time
+    return times
+
+
+def timesBusqBinIterativaConOrdenamientoLog(A, key, attr):
+    times = 0
+    times += timesMergeSort(A, attr, 0, len(A) - 1)
+    x, time = timesBusquedaBinariaIterativa(A, key, attr)
+    times += time
+    return times
 
 
 def busquedaBinariaRecursiva(A, key, attr, inicio, final):
@@ -79,6 +97,64 @@ def timesBusquedaBinariaRecursiva(A, key, attr, inicio, final):
         times += time
         return ret, times
     
+
+def timesBusqBinRecursivaConOrdenamientoDirecto(A, key, attr, inicio, final):
+    times = 0
+    times += timesBubbleSort(A, attr) # ordenando ...
+    x,time = timesBusquedaBinariaRecursiva(A, key, attr, inicio, final)
+    times += time
+    return times
+
+
+def timesBusqBinRecursivaConOrdenamientoLog(A, key, attr, inicio, final):
+    times = 0
+    times += timesMergeSort(A, attr, inicio, final) # ordenando ...
+    x,time = timesBusquedaBinariaRecursiva(A, key, attr, inicio, final)
+    times += time
+    return times
+
+
+
+# Pruebas iterativas con ordenamiento merge sort
+# A = []
+# for _ in range(10):
+#     A.append(Jugador(random.randint(0, 100), "Pedro"))
+# for jugador in A:
+#     print(jugador)
+# tiempo = timesBusqBinIterativaConOrdenamientoLog(A, 2, Jugador.getScore)
+# print(tiempo)
+
+# Pruebas iterativas con ordenamiento bubble sort
+# A = []
+# for _ in range(10):
+#     A.append(Jugador(random.randint(0, 100), "Pedro"))
+# for jugador in A:
+#     print(jugador)
+# tiempo = timesBusqBinIterativaConOrdenamientoDirecto(A, 2, Jugador.getScore)
+# print(tiempo)
+
+
+
+# Pruebas recursivas con ordenamiento bubble sort
+# A = []
+# for _ in range(10):
+#     A.append(Jugador(random.randint(0, 100), "Pedro"))
+# for jugador in A:
+#     print(jugador)
+# tiempo = timesBusqBinRecursivaConOrdenamientoDirecto(A, 2, Jugador.getScore, 0, len(A) - 1)
+# print(tiempo)
+
+# Pruebas recursivas con ordenamiento merge sort
+# A = []
+# for _ in range(10):
+#     A.append(Jugador(random.randint(0, 100), "Pedro"))
+# for jugador in A:
+#     print(jugador)
+# tiempo = timesBusqBinRecursivaConOrdenamientoLog(A, 1, Jugador.getScore, 0, len(A) - 1)
+# print(tiempo)
+
+
+
 
 # Prueba con contador
 # A = []
