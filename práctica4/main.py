@@ -5,7 +5,7 @@ from generarCadena import generarCadena
 from busquedaBinaria import timesBusqBinIterativaConOrdenamientoDirecto, timesBusqBinIterativaConOrdenamientoLog, timesBusqBinRecursivaConOrdenamientoDirecto, timesBusqBinRecursivaConOrdenamientoLog
 from busquedaLineal import timesBusquedaLinealIterativa, timesBusquedaLinealRecursiva
 
-MAX = 1000
+MAX = 100
 
 """
     Búsqueda binaria RECURSIVA con ordenamiento bubble sort
