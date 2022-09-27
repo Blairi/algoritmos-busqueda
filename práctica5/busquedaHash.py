@@ -13,12 +13,12 @@ def convertirLLave(llave):
 
     return keyNum
 
-def h(llave, longitud):
+def hash(llave, longitud):
     return llave % longitud
 
 def insertar(T, longitud, llave, valor):
 
-    h1 = h(convertirLLave(llave), longitud)
+    h1 = hash(convertirLLave(llave), longitud)
 
     j = 0
     while j < longitud:
@@ -26,22 +26,20 @@ def insertar(T, longitud, llave, valor):
         indice = (h1 + j) % longitud
         llaveValor = [llave, valor]
 
-        if T[indice] != None and T[indice][0] == llave: # Si ya existe la llave, reasignamos el nuevo valor
-            T[indice] = llaveValor
-            return indice
-
         if  T[indice] == None:
             T[indice] = llaveValor
             return indice
         
-        j = j + 1
+        else:
+            j = j + 1
         
     print("No hay lugar")
+
     return -1
 
 def buscar(T, longitud, llave):
 
-    h1 = h(convertirLLave(llave), longitud)
+    h1 = hash(convertirLLave(llave), longitud)
 
     j = 0
     while j < longitud:
@@ -57,21 +55,71 @@ def buscar(T, longitud, llave):
 
     return -1
 
-# def buscar(T, longitud, llave):
 
-#     h1 = h(convertirLLave(llave), longitud)
+def timesConvertirLLave(llave):
+    times = 0
+    times += 1
 
-#     j = 0
-#     while j < longitud:
-#         indice = (h1 + j) % longitud
+    keyNum = 0
+    i = 0
+    for char in llave:
+        times += 1
 
-#         if T[indice] != None:
-            
-#             if T[indice][0] == llave:
-#                 return indice
-#             else:
-#                 j = j + 1
+        keyNum = keyNum + ord(char) * i
+        i = i + 1
 
-#         return -1
+    return keyNum, times
 
-#     return -1
+def timesInsertar(T, longitud, llave, valor):
+
+    times = 0
+    times += 1
+
+    llaveConv, time = timesConvertirLLave(llave)
+
+    times += time
+
+    h1 = hash(llaveConv, longitud)
+
+    j = 0
+    while j < longitud:
+
+        times += 1
+
+        indice = (h1 + j) % longitud
+        llaveValor = [llave, valor]
+
+        if  T[indice] == None:
+            T[indice] = llaveValor
+            return indice, times
+        else:
+            j = j + 1
+        
+    print("No hay lugar")
+
+    return -1, times
+
+def timesBuscar(T, longitud, llave):
+
+    times = 0
+    times += 1
+
+    llaveConv, time = timesConvertirLLave(llave)
+    h1 = hash(llaveConv, longitud)
+    times += time
+
+    j = 0
+    while j < longitud:
+
+        times += 1
+    
+        indice = (h1 + j) % longitud
+
+        if T[indice] != None and T[indice][0] == llave:
+            return indice, times
+        else:
+            j = j + 1
+
+        return -1, times
+
+    return -1, times
