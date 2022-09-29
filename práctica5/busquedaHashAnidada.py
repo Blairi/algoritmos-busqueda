@@ -2,6 +2,9 @@
 def formarTablaAnidada(longitud):
     return [ [] for _ in range(longitud) ]
 
+"""
+    Implemetación con listas enlazadas
+"""
 
 def hashModulo(llave, longitud):
 
