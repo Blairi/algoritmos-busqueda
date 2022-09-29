@@ -1,11 +1,14 @@
 import random
 import matplotlib.pyplot as plt
 
-from busquedaHashAnidada import formarTablaAnidada, insertarLineal, timesBuscarLineal, timesInsertarLineal
-from Celular import Celular
-
 from generarCadena import generarCadena
 from recorrerLetras import recorrerLetra
+
+from busquedaHashAnidada import formarTablaAnidada, insertarLineal, timesBuscarLineal, timesInsertarLineal
+from busquedaHashDoble import formarTablaVacia, insertarHashDoble, timesBuscarHashDoble, timesInsertarHashDoble
+
+from Celular import Celular
+
 
 def verLista(lista):
     for listaAni in lista:
@@ -136,6 +139,123 @@ for i in range(1, MAX + 1):
     buscarPeorTimesAni.append(times)
 
 
+
+"""
+    Búsqueda Hash con dirección doble
+"""
+
+# Caso promedio al insertar
+tPromedioDob = formarTablaVacia(MAX)
+insertarPromedioElementosDob = []
+insertarPromedioTimesDob = []
+for i in range(1, MAX + 1):
+    times = timesInsertarHashDoble(
+        tPromedioDob, 
+        generarCadena(random.randint(1, 10)), 
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+    insertarPromedioElementosDob.append(i)
+    insertarPromedioTimesDob.append(times)
+
+# Caso promedio al buscar
+tPromedioDob = formarTablaVacia(MAX)
+buscarPromedioElementosDob = []
+buscarPromedioTimesDob = []
+for i in range(1, MAX + 1):
+    llave = generarCadena(random.randint(1, 10))
+    insertarHashDoble(
+        tPromedioDob,
+        llave,
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+    x, times = timesBuscarHashDoble(tPromedioDob, llave)
+    buscarPromedioElementosDob.append(i)
+    buscarPromedioTimesDob.append(times)
+
+
+# Mejor caso al insertar
+tMejorDob = formarTablaVacia(MAX)
+insertarMejorElementosDob = []
+insertarMejorTimesDob = []
+cuenta = 0
+for i in range(1, MAX + 1):
+    mejorLlave = ""
+    if cuenta < 256:
+        mejorLlave = chr(i) # Generamos el caracter ascii diferente
+        cuenta += 1
+    else:
+        mejorLlave = ""
+        cuenta = 0
+
+    times = timesInsertarHashDoble(
+        mejorLlave, 
+        generarCadena(random.randint(1, 10)), 
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+    insertarMejorElementosDob.append(i)
+    insertarMejorTimesDob.append(times)
+
+# Mejor caso al buscar
+tMejorDob = formarTablaVacia(MAX)
+buscarMejorElementosDob = []
+buscarMejorTimesDob = []
+cuenta = 0
+for i in range(1, MAX + 1):
+
+    mejorLlave = ""
+    if cuenta < 256:
+        mejorLlave = chr(i) # Generamos el caracter ascii diferente
+        cuenta += 1
+    else:
+        mejorLlave = ""
+        cuenta = 0
+    
+    insertarHashDoble(
+        tMejorDob,
+        mejorLlave,
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+    x, times = timesBuscarHashDoble(tMejorDob, mejorLlave)
+    buscarMejorElementosDob.append(i)
+    buscarMejorTimesDob.append(times)
+
+
+# Peor caso al insertar
+llaveRepetida = "repetida"
+
+tPeorDob = formarTablaVacia(MAX)
+insertarPeorElementosDob = []
+insertarPeorTimesDob = []
+for i in range(1, MAX + 1):
+    times = timesInsertarHashDoble(
+        tPeorAni, 
+        llaveRepetida,
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+    insertarPeorElementosDob.append(i)
+    insertarPeorTimesDob.append(times)
+
+# Peor caso al buscar
+tPeorDob = formarTablaVacia(MAX)
+buscarPeorElementosDob = []
+buscarPeorTimesDob = []
+cadena = generarCadena(MAX)
+for i in range(1, MAX + 1):
+    
+    # Búscamos la misma llave solo que ordenada de distinta manera
+    llaveRepetida = recorrerLetra(cadena, i)
+
+    insertarHashDoble(
+        tPeorDob, 
+        llaveRepetida, 
+        Celular( generarCadena(7), random.randint(1, 1500) )
+    )
+
+    x, times = timesBuscarHashDoble(tPeorDob, llaveRepetida)
+
+    buscarPeorElementosDob.append(i)
+    buscarPeorTimesDob.append(times)
+
 # Construyendo gráfica...
 fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(100, 60))
 ax1, ax2, ax3, ax4 = axes.flatten()
@@ -146,7 +266,7 @@ ax2.grid(True)
 ax3.grid(True)
 ax4.grid(True)
 
-
+# Hash anidado
 ax1.set_title("Insersión búsq. hash anidada")
 ax1.plot(insertarPromedioElementosAni, insertarPromedioTimesAni, label = 'Caso promedio', marker = '*', color = 'b')
 ax1.plot(insertarMejorElementosAni, insertarMejorTimesAni, label = 'Mejor caso', marker = 'o', color = 'g')
@@ -156,6 +276,18 @@ ax2.set_title("Búsqueda hash anidada")
 ax2.plot(buscarPromedioElementosAni, buscarPromedioTimesAni, label = 'Caso promedio', marker = '*', color = 'b')
 ax2.plot(buscarMejorElementosAni, buscarMejorTimesAni, label = 'Mejor caso', marker = 'o', color = 'g')
 ax2.plot(buscarPeorElementosAni, buscarPeorTimesAni, label = 'Peor caso', marker = 'x', color = 'r')
+
+
+# Hash con doble dirección
+ax3.set_title("Insersión búsq. hash doble dirección")
+ax3.plot(insertarPromedioElementosDob, insertarPromedioTimesDob, label = 'Caso promedio', marker = '*', color = 'b')
+ax3.plot(insertarMejorElementosDob, insertarMejorTimesDob, label = 'Mejor caso', marker = 'o', color = 'g')
+ax3.plot(insertarPeorElementosDob, insertarPeorTimesDob, label = 'Peor caso', marker = 'x', color = 'r')
+
+ax4.set_title("Búsqueda hash doble dirección")
+ax4.plot(buscarPromedioElementosDob, buscarPromedioTimesDob, label = 'Caso promedio', marker = '*', color = 'b')
+ax4.plot(buscarMejorElementosDob, buscarMejorTimesDob, label = 'Mejor caso', marker = 'o', color = 'g')
+ax4.plot(buscarPeorElementosDob, buscarPeorTimesDob, label = 'Peor caso', marker = 'x', color = 'r')
 
 # Labels de gráficas
 ax1.set_ylabel('Veces que entra')
